@@ -1,0 +1,597 @@
+* {
+  /* border: 1px solid black; */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+:root {
+  --hostColor: rgb(93, 202, 229);
+  --opponentColor: rgb(94, 197, 117);
+  --hitColor: rgb(212, 97, 97);
+  --popup_box: rgb(61, 107, 168);
+  --innerSizeHeight: 70px;
+  --innerSizeWidth: 70px;
+  --time: 1.5s;
+}
+
+/* body {
+  background-color: rgb(0, 0, 0, 0.1);
+} */
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+}
+.start_page_menu {
+  margin-top: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items:start;
+}
+li {
+  margin-top: 10px;
+}
+
+button {
+  height: fit-content;
+  border: none;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 0 4px #999;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.ripple {
+  background-color: hsl(200deg, 50%, 50%);
+  transition: background 0.6s;
+}
+
+.ripple:active {
+  background-color: hsla(200deg, 50%, 60%, 0.32);
+  transition: background 0s;
+
+}
+
+.game_title {
+  font-size: 2.7em;
+  text-align: center;
+  margin-bottom: 1px;
+  border-bottom: 1px solid black;
+}
+
+.game_title_id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+.new_game_button_title {
+  width: 6%;
+  /* border-top: 1px solid black; */
+}
+
+.game_title_id_all {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* text-transform: uppercase; */
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 2px;
+  border-bottom: 1px solid black;
+  color: rgb(49, 43, 43);
+}
+
+.game_title_id_text {
+  margin-left: 10px;
+  margin-right: 10px;
+  text-transform: uppercase;
+}
+
+.start_button {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-size: 1.5em;
+  margin-top: 0.5em;
+  cursor: pointer;
+  gap: 3px;
+}
+
+.player_name_input {
+  margin: 0.5em;
+}
+
+.players_title {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.player_title {
+  width: 45%;
+  justify-content: center;
+  border: 1px solid black;
+  text-transform: uppercase;
+}
+.host_name_color {
+  background-color: var(--hostColor);
+}
+
+.opponent_name_color {
+  background-color: var(--opponentColor);
+}
+
+.your_turn_colors {
+  color: var(--hostColor);
+}
+
+.opponent_turn_colors {
+  color: var(--opponentColor);
+}
+
+.witch_turn_display {
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 700;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0);
+}
+
+.gameContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+}
+
+.player_game_board {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.player_game_board_msg {
+  font-size: 20px;
+}
+
+.player_game_board_order {
+  width: 100%;
+  height: 100%;
+}
+
+.place_order {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px;
+  color: #386259;
+  font-size: 1.5em;
+}
+
+.change_direction_button {
+  margin-left: 18px;
+  /* color: #386259; */
+  font-size: 0.8em;
+  cursor: pointer;
+  font-weight: 500;
+  border-width: 2px;
+}
+
+.place_ships_button_done {
+  /* color: #386259;
+  background-color: #f5f5f5;
+  font-size: 0.8em;
+  font-weight: 500;*/
+  cursor: pointer;
+  z-index: 3;
+}
+
+.waiting_animation {
+  animation: infinite waiting_animation 1s;
+}
+
+@keyframes waiting_animation {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.ships_legend {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 117px;
+  height: 330px;
+}
+
+.hostShip {
+  background-color: var(--hostColor);
+  border: 1px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px 0;
+}
+
+.ship4 {
+  width: 80px;
+  height: 20px;
+}
+
+.ship3 {
+  width: 60px;
+  height: 20px;
+}
+
+.ship2 {
+  width: 40px;
+  height: 20px;
+}
+
+.ship1 {
+  width: 20px;
+  height: 20px;
+}
+
+.board_container {
+  display: grid;
+  height: 300px;
+  width: 300px;
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(11, 1fr);
+}
+
+.board_row {
+  width: 100%;
+  display: flex;
+  grid-column-start: 2;
+  grid-column-end: 12;
+}
+
+.board_row_cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.board_column {
+  height: 100%;
+  display: grid;
+  grid-row-start: 2;
+  grid-row-end: 12;
+}
+
+.board_column_cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.game_board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-column-start: 2;
+  grid-column-end: 12;
+  grid-row-start: 2;
+  grid-row-end: 12;
+  grid-template-columns: repeat(10, 1fr);
+
+}
+
+.game_board_cell {
+  border: 0.5px solid rgb(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.deletebutton {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.hover_select {
+  background-color: rgb(93, 202, 229);
+}
+
+.cell_around_ship {
+  background-color: rgba(192, 184, 180, 0.5);
+}
+
+.cell_selected {
+  background-color: rgb(84, 84, 146);
+  /* opacity: 0.7; */
+}
+
+.placed {
+  background-color: white;
+  cursor: not-allowed;
+  border: 1px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px 0;
+}
+.ship_was_hit {
+  background-color: var(--hitColor);
+  border: 1px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px 0;
+}
+
+.opponent_ships_legend {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
+  width: 117px;
+  height: 330px;
+  gap: 5px;
+}
+
+.opponentShip {
+  background-color: var(--opponentColor);
+  border: 1px solid black;
+  border-radius: 3px;
+  display: flex;
+  box-shadow: 2px 2px 2px 0;
+}
+
+.sunk {
+  background-color: var(--hitColor);
+  border: 1px solid black;
+  border-radius: 3px;
+  display: flex;
+  box-shadow: 2px 2px 2px 0;
+}
+
+.hitBoard {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-column-start: 1;
+  grid-column-end: 12;
+  grid-row-start: 1;
+  grid-row-end: 12;
+  grid-template-columns: repeat(10, 1fr)
+}
+
+
+
+.hit {
+  background-color: var(--hitColor);
+  box-shadow: 0 0 0 0.5px;
+}
+
+.missed {
+  background-color: rgb(228, 229, 218);
+  box-shadow: 0 0 0 0.5px;
+}
+
+
+.opacity {
+  background-color: rgba(0, 0, 0, 0.05);
+  z-index: 1;
+}
+
+.opponentboard2 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-column-start: 1;
+  grid-column-end: 12;
+  grid-row-start: 1;
+  grid-row-end: 12;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.blurred {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.new_game_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  border: 3px solid black;
+  border-radius: 3px;
+  width: 340px;
+  height: 100px;
+  left: 39%;
+  top: 14%;
+  background-color: white;
+  box-shadow: 0px 0px 5px 5px rgb(102, 70, 199);
+  gap: 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+  animation: infinite popup_box 1s;
+}
+
+@keyframes popup_box {
+  0% {
+    box-shadow: 0px 0px 5px 5px var(--popup_box);
+  }
+
+  50% {
+    box-shadow: 0px 0 0 var(--popup_box);
+  }
+
+  100% {
+    box-shadow: 0px 0px 5px 5px var(--popup_box);
+  }
+}
+
+
+
+/* chat css */
+.chat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat_container {
+  /* z-index: 2; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+
+  /* scroll-behavior: smooth; */
+  position: absolute;
+  /* left: 40%; */
+  top: 73%;
+  width: 300px;
+  height: 150px;
+  gap: 3px;
+}
+
+.chat_tuggle_button {
+  width: fit-content;
+}
+
+.chat_massages_list {
+  width: 260px;
+  height: 80%;
+  border: 1px solid black;
+  border-radius: 3px;
+  /* overflow-y:scroll; */
+  /* overflow-x: scroll; */
+}
+
+.chat_input_and_button_line {
+  margin-top: 2px;
+  height: 20%;
+  width: 260px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat_input {
+  border-radius: 3px;
+  width: fit-content;
+  height: 83%;
+}
+
+.chat_button {
+  font-size: 11px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.chat_massages_div_host {
+  display: flex;
+  flex-direction: row;
+}
+
+.chat_massages_div_opponent {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.chat_massages_host {
+  background-color: rgb(181, 242, 181);
+  width: fit-content;
+  border-radius: 3px;
+  border: 1px solid black;
+  font-size: 15px;
+  display: flex;
+  margin: 3px;
+  padding: 2px;
+  gap: 0.5em;
+  padding: 2px;
+  margin: 2px;
+}
+
+.chat_massages_opponent {
+  background-color: rgb(225, 168, 142);
+  width: fit-content;
+  border-radius: 3px;
+  border: 1px solid black;
+  font-size: 15px;
+  display: flex;
+  margin: 3px;
+  padding: 2px;
+  gap: 0.5em;
+  padding: 2px;
+  margin: 2px;
+}
+/* .circle_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+} */
+.circle {
+  position: fixed;
+  top: 50%;
+  left: 47.5%;
+  height: var(--innerSizeHeight);
+  width: var(--innerSizeWidth);
+  border-left: 1.5px solid blue;
+  border-bottom: 1.5px solid blue;
+  border-radius: var(--innerSizeWidth);
+  animation: sizeChangeInnerCircle var(--time) linear infinite;
+}
+
+@keyframes sizeChangeInnerCircle {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+    border-color: red;
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+
+}
