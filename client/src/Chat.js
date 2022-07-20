@@ -3,52 +3,51 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 
-let massageData = {
+let messageData = {
     chatRoom: "",
-    massage: "",
+    message: "",
     time: 0
 }
 
 function Chat({ socket, room, playerName, endGame }) {
 
-    const [currentMassage, setCurrentMassage] = React.useState("");
-    const [massageList, setMassageList] = React.useState([]);
+    const [currentMessage, setCurrentMessage] = React.useState("");
+    const [messageList, setMessageList] = React.useState([]);
     const [chatOn, setChatOn] = React.useState(true);
 
-
-
-    function sendMassage() {
-        console.log("currentMassage:", currentMassage)
-        if (currentMassage !== "") {
-            massageData = {
+    function sendmessage() {
+        console.log("currentmessage:", currentMessage)
+        if (currentMessage !== "") {
+            messageData = {
                 chatRoom: room,
-                massage: currentMassage,
+                message: currentMessage,
                 playerName: playerName,
                 time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()
             }
-            let newMassageList = [...massageList];
-            newMassageList = [...newMassageList, massageData]
-            setMassageList(newMassageList);
-            setCurrentMassage("");
+            let newMessageList = [...messageList];
+            newMessageList = [...newMessageList, messageData]
+            setMessageList(newMessageList);
+            setCurrentMessage("");
             setChatOn(true);
+            socket.emit("send-message", messageData, room);
         }
     }
-    useEffect(() => {
-        socket.emit("send-massage", massageData, room);
-    }, [massageData])
+    // useEffect(() => {
+
+    // }, [messageData])
 
     useEffect(() => {
-        socket.on("resive-massage", data => {
+        socket.on("resive-message", data => {
             setChatOn(true);
-            let newMassageList = [...massageList];
-            newMassageList = [...newMassageList, data]
-            setMassageList(newMassageList);
-        }, [massageList])
-    })
+            let newMessageList = [...messageList];
+            newMessageList = [...newMessageList, data]
+            setMessageList(newMessageList);
+        })
+    }, [messageList])
 
     useEffect(() => {
-        if (endGame !== "") {
-            setMassageList([]);
+        if (endGame === "") {
+            setMessageList([]);
         };
     }, [endGame])
 
@@ -56,39 +55,44 @@ function Chat({ socket, room, playerName, endGame }) {
     return (
         <div className="chat">
             <div className="chat_container">
-                <button className="chat_tuggle_button ripple" onClick={() => setChatOn(!chatOn)}>{chatOn ? "close chat" : "open chat"}</button>
+                <button
+                    className="chat_tuggle_button ripple"
+                    onClick={() => setChatOn(!chatOn)}>
+                    {chatOn ? "close chat" : "open chat"}
+                </button>
                 {chatOn &&
-                    <ScrollToBottom className="chat_massages_list">
-                        {massageList.map((massageContent, i) => {
+                    <ScrollToBottom className="chat_messages_list">
+                        {messageList.map((messageContent, i) => {
                             return (
-                                <div className={massageContent.playerName === playerName ?
-                                    "chat_massages_div_host"
-                                    : "chat_massages_div_opponent"} key={i}>
-                                    <span className={massageContent.playerName === playerName ?
-                                        "chat_massages_host"
-                                        : "chat_massages_opponent"}> 
-                                        {massageContent.playerName}: {massageContent.massage}
+                                <div className={messageContent.playerName === playerName ?
+                                    "chat_messages_div_host"
+                                    : "chat_messages_div_opponent"} key={i}>
+                                    <span className={messageContent.playerName === playerName ?
+                                        "chat_messages_host"
+                                        : "chat_messages_opponent"}>
+                                        {messageContent.playerName}: {messageContent.message}
                                     </span>
                                 </div>
                             )
-                        })}
+                        })
+                        }
                     </ScrollToBottom>
                 }
                 <div className="chat_input_and_button_line">
                     <input
-                        placeholder="write a massage"
+                        placeholder="write a message"
                         className="chat_input"
-                        value={currentMassage}
+                        value={currentMessage}
                         type="text"
-                        onChange={(e) => setCurrentMassage(e.target.value)}>
+                        onChange={(e) => setCurrentMessage(e.target.value)}>
                     </input>
                     <Button
                         variant="contained"
                         endIcon={<SendIcon />}
-                        onClick={() => { sendMassage() }}>
+                        onClick={() => sendmessage()}>
                         Send
                     </Button>
-                    {/* <button className="chat_button ripple" onClick={() => { sendMassage() }}>send massage</button> */}
+                    {/* <button className="chat_button ripple" onClick={() => { sendmessage() }}>send message</button> */}
                 </div>
             </div>
         </div>

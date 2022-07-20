@@ -494,7 +494,7 @@ button {
   width: fit-content;
 }
 
-.chat_massages_list {
+.chat_messages_list {
   width: 260px;
   height: 80%;
   border: 1px solid black;
@@ -524,17 +524,17 @@ button {
   height: fit-content;
 }
 
-.chat_massages_div_host {
+.chat_messages_div_host {
   display: flex;
   flex-direction: row;
 }
 
-.chat_massages_div_opponent {
+.chat_messages_div_opponent {
   display: flex;
   flex-direction: row-reverse;
 }
 
-.chat_massages_host {
+.chat_messages_host {
   background-color: rgb(181, 242, 181);
   width: fit-content;
   border-radius: 3px;
@@ -548,7 +548,7 @@ button {
   margin: 2px;
 }
 
-.chat_massages_opponent {
+.chat_messages_opponent {
   background-color: rgb(225, 168, 142);
   width: fit-content;
   border-radius: 3px;

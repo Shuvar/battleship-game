@@ -1,30 +1,35 @@
 import React from 'react';
 
 
-
-function StartPage({ setPlayer1, setPlayer1Id, socket, inputPlayerName, inputGameId, setInputPlayerName, setInputGameId }) {
+function StartPage({
+    setPlayer1,
+    setPlayer1Id,
+    socket,
+    inputPlayerName,
+    inputGameId,
+    setInputPlayerName,
+    setInputGameId }) {
 
     const [computerPlayer, setComputerPlayer] = React.useState(false);
 
 
     function checkIfValidNameJoinARoom() {  // לחיצה על צירוף למשחק
         if (inputPlayerName && inputGameId) {
-          setPlayer1(inputPlayerName);
-          setPlayer1Id(socket.id);
-          socket.emit(`join-a-room`, { inputGameId, inputPlayerName })
-          console.log("inputGameId, inputPlayerName:", inputGameId, inputPlayerName)
-    
+            setPlayer1(inputPlayerName);
+            setPlayer1Id(socket.id);
+            socket.emit(`join-a-room`, { inputGameId, inputPlayerName });
         }
-      };
-    
-      function checkIfValidNameCreateARoom() {  // לחיצה על יצירת משחק חדש
+    };
+
+    function checkIfValidNameCreateARoom() {  // לחיצה על יצירת משחק חדש
         if (inputPlayerName) {
-          socket.emit(`create-a-room`, `create-a-room`);
-          setPlayer1(inputPlayerName);
-          setPlayer1Id(socket.id);
+            socket.emit(`create-a-room`, `create-a-room`);
+            setPlayer1(inputPlayerName);
+            setPlayer1Id(socket.id);
+            setInputGameId("");
         }
-      };
-    
+    };
+
     return (
         <>
             <div className="start_button flex_column">

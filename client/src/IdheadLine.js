@@ -1,12 +1,12 @@
 import React from 'react';
 
-function IdheadLine({ gameId, funInitialGame }) {
+function IdheadLine({ gameId, initialGame }) {
     return (
         <>
             <div className="game_title_id_all">
                 <button
                     className="ripple new_game_button_title"
-                    onClick={() => funInitialGame()}>
+                    onClick={() => initialGame()}>
                     NEW GAME
                 </button>
                 <div className="game_title_id">
