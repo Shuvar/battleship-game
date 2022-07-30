@@ -7,6 +7,7 @@ import StartPage from "./StartPage";
 import HostBoard from "./HostBoard";
 import SocketFunctions from "./Socket";
 import OpponentBoard from "./OpponentBoard";
+import ComputerGame from "./ComputerGame";
 
 function createTable(numOfCalls) {
   let table = [];
@@ -14,14 +15,14 @@ function createTable(numOfCalls) {
     table.push({
       key,
       className: '',
-      selected: ''
+      selected: ``
     });
   };
   return table;
 };
 
-const socket = io("ws://localhost:3030");
-// const socket = io("https://battleship-app-server.herokuapp.com");
+// const socket = io("ws://localhost:3030");
+const socket = io("https://battleship-app-server.herokuapp.com");
 
 const boardRow = createTable(10);
 const boardColumn = createTable(10);
@@ -53,10 +54,14 @@ function App() {
   const [player2, setPlayer2] = React.useState("");  // player2 name  13
   const [player1Id, setPlayer1Id] = React.useState(""); //14
   const [player2Id, setPlayer2Id] = React.useState(""); //15
+  const [computerPlayer, setComputerPlayer] = React.useState(false);
   const [placeShip, setPlaceShip] = React.useState(false); // check if the player end to put all the ships  20
   const [submitDone, setSubmitDone] = React.useState(false); // check if the player end to put all the ships  21
+  const [shipsLegend, setShipsLegend] = React.useState(initialShipLegend); // the legend of the ships 22
+  const [hitBoard, setHitBoard] = React.useState(createTable(100)); //18
 
   function initialGame() {  // מאתחל את המשחק
+    setComputerPlayer(false);
     setPlayer2("");
     setPlaceShip(false);
     setWaiting(false);
@@ -69,6 +74,20 @@ function App() {
     setInputGameId("");
     setInputPlayerName("");
     setUserDisconnected(true);
+    setComputerPlayer(false);
+    setHitBoard(createTable(100));
+    setShipsLegend([
+      { key: 1, shipId: 41, length: 4, numOfHit: 0 },
+      { key: 2, shipId: 31, length: 3, numOfHit: 0 },
+      { key: 3, shipId: 32, length: 3, numOfHit: 0 },
+      { key: 4, shipId: 21, length: 2, numOfHit: 0 },
+      { key: 5, shipId: 22, length: 2, numOfHit: 0 },
+      { key: 6, shipId: 23, length: 2, numOfHit: 0 },
+      { key: 7, shipId: 11, length: 1, numOfHit: 0 },
+      { key: 8, shipId: 12, length: 1, numOfHit: 0 },
+      { key: 9, shipId: 13, length: 1, numOfHit: 0 },
+      { key: 10, shipId: 14, length: 1, numOfHit: 0 },
+    ]);
     socket.emit(`leave-game`, gameId)
   };
 
@@ -104,7 +123,7 @@ function App() {
             initialGame={initialGame}
           />
         }
-        {(!player1 || !gameId) &&
+        {(!player1 && !gameId) &&
           <StartPage
             inputPlayerName={inputPlayerName}
             inputGameId={inputGameId}
@@ -113,17 +132,21 @@ function App() {
             setInputPlayerName={setInputPlayerName}
             setInputGameId={setInputGameId}
             socket={socket}
+            setComputerPlayer={setComputerPlayer}
+            setPlayer2={setPlayer2}
           />
         }
-        {(player1 && gameId) &&
+        {((player1 && gameId) || (player1 && computerPlayer)) &&
           <div>
-            <Chat
-              socket={socket}
-              room={gameId}
-              playerName={player1}
-              player2Name={player2}
-              endGame={endGame}
-            />
+            {!computerPlayer &&
+              <Chat
+                socket={socket}
+                room={gameId}
+                playerName={player1}
+                player2Name={player2}
+                endGame={endGame}
+              />
+            }
             <div className="players_title">
               <h2 className="player_title host_name_color">{player1}</h2>
               <h2 className="player_title opponent_name_color">{player2}</h2>
@@ -142,6 +165,11 @@ function App() {
                 gameId={gameId}
                 setIsMyTurn={setIsMyTurn}
                 initialShipLegend={initialShipLegend}
+                computerPlayer={computerPlayer}
+                hitBoard={hitBoard}
+                setHitBoard={setHitBoard}
+                shipsLegend={shipsLegend}
+                setShipsLegend={setShipsLegend}
               />
               <div className="player_game_board_order">
                 {(player2 && !userDisconnected && submitDone && waiting) ?
@@ -160,12 +188,27 @@ function App() {
                     setThinkingCircle={setThinkingCircle}
                   />
                   :
-                  ((waiting && !userDisconnected) ?
-                    <div className="player_game_board player_game_board_msg waiting_animation">{player2} has finished and waiting for you</div>
-                    : (player2 ? <div className="player_game_board player_game_board_msg waiting_animation">Waiting for {player2}, he's not ready yet</div>
-                      : <div className="player_game_board player_game_board_msg waiting_animation">Waiting for someone to join in</div>))
+                  (computerPlayer && submitDone ?
+                    <ComputerGame
+                      endGame={endGame}
+                      setEndGame={setEndGame}
+                      setThinkingCircle={setThinkingCircle}
+                      isMyTurn={isMyTurn}
+                      setIsMyTurn={setIsMyTurn}
+                      boardRow={boardRow}
+                      boardColumn={boardColumn}
+                      hitBoard={hitBoard}
+                      setHitBoard={setHitBoard}
+                      shipsLegend={shipsLegend}
+                      setShipsLegend={setShipsLegend}
+                    />
+                    :
+                    ((waiting && !userDisconnected && !computerPlayer) ?
+                      <div className="player_game_board player_game_board_msg waiting_animation">{player2} has finished and waiting for you</div>
+                      : (player2 ? <div className="player_game_board player_game_board_msg waiting_animation">Waiting for {player2}, he's not ready yet</div>
+                        : <div className="player_game_board player_game_board_msg waiting_animation">Waiting for someone to join in</div>)))
                 }
-                {submitDone &&
+                {(submitDone && !computerPlayer) &&
                   ((player2 && isMyTurn && waiting)
                     ? <div className="your_turn_colors witch_turn_display" >It's your turn</div>
                     : ((player2 && !isMyTurn && waiting) &&

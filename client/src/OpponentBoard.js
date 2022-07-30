@@ -79,7 +79,7 @@ function OpponentBoard({ socket, gameId, endGame, setEndGame, boardRow, boardCol
         socket.on("hit-result", (data) => {
             setHitAnswer(data);
         })
-    }, [gameId]);
+    }, []);
 
     useEffect(() => {
         hitAnswer.cellIndex !== "" && resultHit(hitAnswer);

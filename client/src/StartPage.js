@@ -8,9 +8,12 @@ function StartPage({
     inputPlayerName,
     inputGameId,
     setInputPlayerName,
-    setInputGameId }) {
+    setInputGameId,
+    setComputerPlayer,
+    setPlayer2
+ }) {
 
-    const [computerPlayer, setComputerPlayer] = React.useState(false);
+    
 
 
     function checkIfValidNameJoinARoom() {  // לחיצה על צירוף למשחק
@@ -52,7 +55,7 @@ function StartPage({
                     <li>
                         <div >
                             <button
-                                className="ripple"
+                                className="ripple"  
                                 onClick={() => checkIfValidNameJoinARoom()}>
                                 Join a game
                             </button>
@@ -65,8 +68,8 @@ function StartPage({
                     </li>
                     <li>
                         <button
-                            className="ripple"
-                            onClick={() => setComputerPlayer(true)}>
+                            className="ripple"                          
+                            onClick={() => (setComputerPlayer(true), setPlayer1(inputPlayerName), setPlayer2("computer"))}>   
                             play vs computer
                         </button>
                     </li>

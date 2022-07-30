@@ -32,9 +32,6 @@ function Chat({ socket, room, playerName, endGame }) {
             socket.emit("send-message", messageData, room);
         }
     }
-    // useEffect(() => {
-
-    // }, [messageData])
 
     useEffect(() => {
         socket.on("resive-message", data => {

@@ -11,6 +11,9 @@ function SocketFunctions({socket, setUserDisconnected, setIsMyTurn, setWaiting, 
             initialGame();
             console.log('inputPlayerName, gameId:', inputPlayerName, gameId);
         });
+        socket.on("name", (userId, inputGameId, inputPlayerName) => {
+            setName({ userId, inputGameId, inputPlayerName })
+        })
         socket.on("game-started", (inputGameId) => {
             console.log(`game-started2`, inputGameId)
             setEndGame("full_game");
@@ -26,13 +29,17 @@ function SocketFunctions({socket, setUserDisconnected, setIsMyTurn, setWaiting, 
         socket.on(`socket-id`, (data) => {
             setPlayer2Id(data);
         });
+        socket.on(`first-turn`, (data) => {
+            setIsMyTurn(true);
+        });
+        socket.on(`turn`, (data) => {
+            setIsMyTurn(data);
+        });    
+        socket.on(`end-game`, (data) => {
+            setIsMyTurn(false)
+            setEndGame("lost")
+        });
     }, []);
-
-    useEffect(() => {
-        socket.on("name", (userId, inputGameId, inputPlayerName) => {
-            setName({ userId, inputGameId, inputPlayerName })
-        })
-    });
 
     useEffect(() => {
         if (player2 === "") {
@@ -50,19 +57,6 @@ function SocketFunctions({socket, setUserDisconnected, setIsMyTurn, setWaiting, 
             socket.emit('game-started', name.userId, name.inputGameId)
         }
     }, [name]);
-
-    useEffect(() => {
-        socket.on(`first-turn`, (data) => {
-            setIsMyTurn(true);
-        });
-        socket.on(`turn`, (data) => {
-            setIsMyTurn(data);
-        });    
-        socket.on(`end-game`, (data) => {
-            setIsMyTurn(false)
-            setEndGame("lost")
-        });
-    }, [gameId]);
 
     useEffect(() => {
         socket.on(`waiting-msg`, () => {

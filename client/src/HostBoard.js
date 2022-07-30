@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
 
 
-function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSubmitDone, boardRow, boardColumn, createTable, gameId, setIsMyTurn, initialShipLegend }) {
+function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSubmitDone, boardRow, boardColumn, createTable, gameId, setIsMyTurn, initialShipLegend, computerPlayer, hitBoard, setHitBoard, shipsLegend, setShipsLegend}) {
 
     const [hostBoard, setHostBoard] = React.useState(createTable(100));   // the board of the game  16
-    const [shipsLegend, setShipsLegend] = React.useState(initialShipLegend); // the legend of the ships 22
     const [selectedCells, setSelectedCells] = React.useState([]); // the cells that the player selected 19
     const [selectedShip, setSelectedShip] = React.useState(); // the ship that the player selected  //24
     const [direction, setDirection] = React.useState(true);
-    const [hitBoard, setHitBoard] = React.useState(createTable(100)); //18
     const [checkHit, setCheckHit] = React.useState(true); //5
 
     useEffect(() => {
@@ -16,21 +14,8 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
             setSelectedShip();
             setSelectedCells([]);
             setDirection(true);
-            setHostBoard(createTable(100));
-            setHitBoard(createTable(100));
             setCheckHit(true);
-            setShipsLegend([
-                { key: 1, shipId: 41, length: 4, numOfHit: 0 },
-                { key: 2, shipId: 31, length: 3, numOfHit: 0 },
-                { key: 3, shipId: 32, length: 3, numOfHit: 0 },
-                { key: 4, shipId: 21, length: 2, numOfHit: 0 },
-                { key: 5, shipId: 22, length: 2, numOfHit: 0 },
-                { key: 6, shipId: 23, length: 2, numOfHit: 0 },
-                { key: 7, shipId: 11, length: 1, numOfHit: 0 },
-                { key: 8, shipId: 12, length: 1, numOfHit: 0 },
-                { key: 9, shipId: 13, length: 1, numOfHit: 0 },
-                { key: 10, shipId: 14, length: 1, numOfHit: 0 },
-            ]);
+            setHostBoard(createTable(100));   
         };
     }, [endGame])
 
@@ -475,7 +460,10 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
         for (let i = 0; i < newShipsLegend.length; i++) {
             newShipsLegend[i].aroundCells = [];
         }
-        cellPainter(newShipsLegend)
+        cellPainter(newShipsLegend);
+        if (computerPlayer) {
+            setIsMyTurn(true);
+        }
         socket.emit("waiting-msg", gameId)
     };
 
