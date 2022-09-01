@@ -14,7 +14,7 @@ function createTable(numOfCalls) {
     return table;
 };
 
-let randomBoardNumber = Math.round(Math.random() *1);
+let randomBoardNumber = Math.round(Math.random() * 1);
 const computerBoard = computerBoards[randomBoardNumber];
 
 
@@ -64,7 +64,7 @@ function ComputerGame({ endGame, setEndGame, setThinkingCircle, isMyTurn, setIsM
                 newComputerGameBoard[cellNumber].className = "missed";
                 setIsMyTurn(false);
                 setThinkingCircle(true)
-                setTimeout(setComputerTurn,1000,(!computerTurn));
+                setTimeout(setComputerTurn, 1000, (!computerTurn));
             };
             setComputerGameBoard(newComputerGameBoard);
             setComputerLegend(newComputerLegend);
@@ -72,7 +72,7 @@ function ComputerGame({ endGame, setEndGame, setThinkingCircle, isMyTurn, setIsM
     };
 
     useEffect(() => {       // computer turn
-        if (!isMyTurn && endGame==="") {
+        if (!isMyTurn && endGame === "") {
             setThinkingCircle(false)
             let newHitBoard = [...hitBoard];
             let newShipsLegend = [...shipsLegend];
@@ -94,13 +94,14 @@ function ComputerGame({ endGame, setEndGame, setThinkingCircle, isMyTurn, setIsM
                                 checkIfWon(newHitBoard, "lost")
                             };
                         };
-                        setTimeout(setComputerTurn,1000,(!computerTurn));                    };
+                        setTimeout(setComputerTurn, 1000, (!computerTurn));
+                    };
                     if (!find) {
                         newHitBoard[randomCellNumber].className = "missed";
                         setIsMyTurn(true);
                         setThinkingCircle(false);
                     };
-                } else setTimeout(setComputerTurn,1000,(!computerTurn));
+                } else setTimeout(setComputerTurn, 1000, (!computerTurn));
             };
             setHitBoard(newHitBoard);
             setShipsLegend(newShipsLegend);
@@ -128,6 +129,7 @@ function ComputerGame({ endGame, setEndGame, setThinkingCircle, isMyTurn, setIsM
             setComputerTurn(false);
         }
     }, [endGame]);
+    
     return (
         <>
             <div className="player_game_board">

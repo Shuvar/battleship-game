@@ -52,11 +52,7 @@ function Chat({ socket, room, playerName, endGame }) {
     return (
         <div className="chat">
             <div className="chat_container">
-                <button
-                    className="chat_tuggle_button ripple"
-                    onClick={() => setChatOn(!chatOn)}>
-                    {chatOn ? "close chat" : "open chat"}
-                </button>
+                
                 {chatOn &&
                     <ScrollToBottom className="chat_messages_list">
                         {messageList.map((messageContent, i) => {
@@ -83,12 +79,18 @@ function Chat({ socket, room, playerName, endGame }) {
                         type="text"
                         onChange={(e) => setCurrentMessage(e.target.value)}>
                     </input>
-                    <Button
+                    <button
+                    className="chat_tuggle_button ripple"
                         variant="contained"
-                        endIcon={<SendIcon />}
+                        // endIcon={<SendIcon />}
                         onClick={() => sendmessage()}>
                         Send
-                    </Button>
+                    </button>
+                    <button
+                    className="chat_tuggle_button ripple"
+                    onClick={() => setChatOn(!chatOn)}>
+                    {chatOn ? "close" : "open"}
+                </button>
                     {/* <button className="chat_button ripple" onClick={() => { sendmessage() }}>send message</button> */}
                 </div>
             </div>

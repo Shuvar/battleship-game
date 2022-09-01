@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
+import Chat from "./Chat";
 
-
-function OpponentBoard({ socket, gameId, endGame, setEndGame, boardRow, boardColumn, isMyTurn, setIsMyTurn, createTable, initialShipLegend, setThinkingCircle }) {
+function OpponentBoard({ player1, player2, socket, gameId, endGame, setEndGame, boardRow, boardColumn, isMyTurn, setIsMyTurn, createTable, initialShipLegend, setThinkingCircle }) {
 
     const opponnentbord2 = createTable(100);
     const [opponentBoard, setOpponentBoard] = React.useState(createTable(100)); //17
@@ -87,7 +87,7 @@ function OpponentBoard({ socket, gameId, endGame, setEndGame, boardRow, boardCol
 
     return (
         <>
-            <div className="player_game_board">
+            <div className="opponent_player_game_board">
                 <div className="board_container">
                     <div className="board_row">
                         {boardRow.map((cell, i) => {
@@ -130,6 +130,7 @@ function OpponentBoard({ socket, gameId, endGame, setEndGame, boardRow, boardCol
                         </>)
                     })}
                 </div>
+                
             </div>
         </>
     )

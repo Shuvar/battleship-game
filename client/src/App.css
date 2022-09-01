@@ -13,27 +13,40 @@
   --time: 1.5s;
 }
 
-/* body {
-  background-color: rgb(0, 0, 0, 0.1);
-} */
+body {
+  /* position: relative; */
+  /* background-color: rgb(0, 0, 0, 0.1); */
+}
+
+.rights {
+  font-size:12.5px;
+  position: absolute;
+  top: 10px;
+  background-color:grey;
+  padding:2px;
+  color: white;
+}
 .flex_column {
   display: flex;
   flex-direction: column;
-  align-items:center;
+  align-items: center;
 }
+
 .start_page_menu {
   margin-top: 10px;
   list-style: none;
   display: flex;
   flex-direction: column;
-  align-items:start;
+  align-items: start;
 }
+
 li {
   margin-top: 10px;
 }
 
 button {
   height: fit-content;
+  width: fit-content;
   border: none;
   padding: 0.4rem;
   font-size: 0.8rem;
@@ -62,7 +75,7 @@ button {
   border-bottom: 1px solid black;
 }
 
-.game_title_id {
+.second_headLine {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +87,15 @@ button {
   /* border-top: 1px solid black; */
 }
 
-.game_title_id_all {
+@media (max-width: 666px) {
+  .new_game_button_title {
+    width: fit-content;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.second_headLine_all {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -86,7 +107,25 @@ button {
   color: rgb(49, 43, 43);
 }
 
-.game_title_id_text {
+.id_game_text {
+  color: blue;
+  /* font-size: 15px; */
+}
+
+@media (max-width: 666px) {
+  .second_headLine_all {
+    font-size: 8px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .id_game_text {
+    color: blue;
+    font-size: 1.2rem;
+  }
+}
+
+.second_headLine_text {
   margin-left: 10px;
   margin-right: 10px;
   text-transform: uppercase;
@@ -104,6 +143,16 @@ button {
 
 .player_name_input {
   margin: 0.5em;
+ 
+}
+
+.no_name_player_name_input {
+  margin: 0.5em;
+  border: solid red;
+}
+
+.no_name_style {
+  color: red;font-size: 12px;
 }
 
 .players_title {
@@ -115,11 +164,13 @@ button {
 }
 
 .player_title {
-  width: 45%;
+  width: 95%;
+  display: flex;
   justify-content: center;
   border: 1px solid black;
   text-transform: uppercase;
 }
+
 .host_name_color {
   background-color: var(--hostColor);
 }
@@ -154,6 +205,18 @@ button {
   gap: 10px;
 }
 
+@media (max-width: 666px) {
+  .gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+  }
+}
+
 .player_game_board {
   width: 100%;
   height: 400px;
@@ -161,7 +224,22 @@ button {
   justify-content: space-evenly;
 }
 
-.player_game_board_msg {
+.opponent_player_game_board {
+  width: 100%;
+  height: 330px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* .player_game_board_msg {
+  
+} */
+
+.player_game_board_msg_container {
+  padding-top: 10px;
+  padding-bottom: 50px;
+  display: flex;
+  justify-content: center;
   font-size: 20px;
 }
 
@@ -328,6 +406,12 @@ button {
   border: 1px solid black;
 }
 
+/* @media (hover: none) {
+  .hover_select {
+    background-color: rgb(93, 202, 229);
+  }
+} */
+
 .hover_select {
   background-color: rgb(93, 202, 229);
 }
@@ -349,6 +433,7 @@ button {
   cursor: pointer;
   box-shadow: 2px 2px 2px 0;
 }
+
 .ship_was_hit {
   background-color: var(--hitColor);
   border: 1px solid black;
@@ -430,18 +515,23 @@ button {
   cursor: not-allowed;
 }
 
+.end_game_box_container {
+  display: flex;
+  justify-content: center;
+}
+
 .new_game_button {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  position: fixed;
+  /* position: fixed; */
   border: 3px solid black;
   border-radius: 3px;
   width: 340px;
   height: 100px;
-  left: 39%;
-  top: 14%;
+  /* left: 39%;
+  top: 14%; */
   background-color: white;
   box-shadow: 0px 0px 5px 5px rgb(102, 70, 199);
   gap: 10px;
@@ -449,6 +539,14 @@ button {
   font-size: 20px;
   font-weight: 700;
   animation: infinite popup_box 1s;
+}
+
+@media (max-width: 666px) {
+  .new_game_button {
+    /* left: 6.5%;
+  top: 52%; */
+  }
+
 }
 
 @keyframes popup_box {
@@ -469,6 +567,10 @@ button {
 
 /* chat css */
 .chat {
+  /* position: absolute;
+  left: 75%;
+  top: -3%; */
+  /* margin-top:50px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -482,11 +584,11 @@ button {
   flex-direction: column;
 
   /* scroll-behavior: smooth; */
-  position: absolute;
+
   /* left: 40%; */
-  top: 73%;
+  /* top: 73%; */
   width: 300px;
-  height: 150px;
+  height: 100px;
   gap: 3px;
 }
 
@@ -496,16 +598,17 @@ button {
 
 .chat_messages_list {
   width: 260px;
-  height: 80%;
+  height: 80px;
   border: 1px solid black;
   border-radius: 3px;
+  background-color: white;
   /* overflow-y:scroll; */
   /* overflow-x: scroll; */
 }
 
 .chat_input_and_button_line {
   margin-top: 2px;
-  height: 20%;
+  height: 30px;
   width: 260px;
   display: flex;
   justify-content: space-between;
@@ -542,10 +645,8 @@ button {
   font-size: 15px;
   display: flex;
   margin: 3px;
-  padding: 2px;
   gap: 0.5em;
   padding: 2px;
-  margin: 2px;
 }
 
 .chat_messages_opponent {
@@ -556,18 +657,10 @@ button {
   font-size: 15px;
   display: flex;
   margin: 3px;
-  padding: 2px;
   gap: 0.5em;
   padding: 2px;
-  margin: 2px;
 }
-/* .circle_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-} */
+
 .circle {
   position: fixed;
   top: 50%;

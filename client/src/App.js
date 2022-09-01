@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import "./App.css";
 import io from 'socket.io-client';
 import Chat from "./Chat";
@@ -39,26 +39,36 @@ const initialShipLegend = [
   { key: 10, shipId: 14, length: 1, numOfHit: 0 },
 ];
 
+function getWindowDimensions() {
+
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
 
 function App() {
 
-  const [thinkingCircle, setThinkingCircle] = React.useState(false) //2
-  const [endGame, setEndGame] = React.useState(""); //3
-  const [inputGameId, setInputGameId] = React.useState(""); //6
-  const [gameId, setGameId] = React.useState(null); //7
-  const [waiting, setWaiting] = React.useState(false);  //8
-  const [isMyTurn, setIsMyTurn] = React.useState(false);  //9
-  const [userDisconnected, setUserDisconnected] = React.useState(true); //10
-  const [inputPlayerName, setInputPlayerName] = React.useState(""); // the player name in the input 11
-  const [player1, setPlayer1] = React.useState("");  // player1 name  12
-  const [player2, setPlayer2] = React.useState("");  // player2 name  13
-  const [player1Id, setPlayer1Id] = React.useState(""); //14
-  const [player2Id, setPlayer2Id] = React.useState(""); //15
-  const [computerPlayer, setComputerPlayer] = React.useState(false);
-  const [placeShip, setPlaceShip] = React.useState(false); // check if the player end to put all the ships  20
-  const [submitDone, setSubmitDone] = React.useState(false); // check if the player end to put all the ships  21
-  const [shipsLegend, setShipsLegend] = React.useState(initialShipLegend); // the legend of the ships 22
-  const [hitBoard, setHitBoard] = React.useState(createTable(100)); //18
+  // const [windowDimensions, setWindowDimensions] = React.useState(getWindowDimensions());
+  // const [touchScreen, setTouchScreen] = React.useState(false)
+  const [thinkingCircle, setThinkingCircle] = React.useState(false) //1
+  const [endGame, setEndGame] = React.useState(""); //2
+  const [inputGameId, setInputGameId] = React.useState(""); //3
+  const [gameId, setGameId] = React.useState(null); //4
+  const [waiting, setWaiting] = React.useState(false);  //5
+  const [isMyTurn, setIsMyTurn] = React.useState(false);  //6
+  const [userDisconnected, setUserDisconnected] = React.useState(true); // 7
+  const [inputPlayerName, setInputPlayerName] = React.useState(""); // the player name in the input 8
+  const [player1, setPlayer1] = React.useState("");  // player1 name  9
+  const [player2, setPlayer2] = React.useState("");  // player2 name  10
+  const [player1Id, setPlayer1Id] = React.useState(""); //11
+  const [player2Id, setPlayer2Id] = React.useState(""); //12
+  const [computerPlayer, setComputerPlayer] = React.useState(false);// 13
+  const [placeShip, setPlaceShip] = React.useState(false); // check if the player end to put all the ships  14
+  const [submitDone, setSubmitDone] = React.useState(false); // check if the player end to put all the ships  15
+  const [shipsLegend, setShipsLegend] = React.useState(initialShipLegend); // the legend of the ships 16
+  const [hitBoard, setHitBoard] = React.useState(createTable(100)); //17
 
   function initialGame() {  // מאתחל את המשחק
     setComputerPlayer(false);
@@ -93,6 +103,8 @@ function App() {
 
   return (
     <>
+
+      {/* {console.log("size:", windowDimensions)} */}
       <SocketFunctions
         socket={socket}
         endGame={endGame}
@@ -117,14 +129,43 @@ function App() {
       <div className="circle_container">
         {thinkingCircle && <div className="circle"></div>}
         <h1 className="game_title">BattleShip Game</h1>
-        {gameId &&
+        {endGame === "full_game" &&
+          <div className="end_game_box_container">
+            <div className="new_game_button">
+              <div>THE GAME ALREADY STARTED</div>
+              <div>
+                <button className="ripple"
+                  onClick={() => initialGame()}>
+                  Back to main menu
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+        {(player1 && player1Id && gameId === null && inputGameId && endGame !== "full_game" && !computerPlayer) &&
+          <div className="end_game_box_container">
+            <div className="new_game_button">
+              <div>GAME {inputGameId} DOES NOT EXIST</div>
+              <div>
+                <button className="ripple"
+                  onClick={() => initialGame()}>
+                  Back to main menu
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+        {(gameId || computerPlayer) &&
           <IdheadLine
+            player2Id={player2Id}
+            computerPlayer={computerPlayer}
             gameId={gameId}
             initialGame={initialGame}
           />
         }
         {(!player1 && !gameId) &&
           <StartPage
+            initialGame={initialGame}
             inputPlayerName={inputPlayerName}
             inputGameId={inputGameId}
             setPlayer1Id={setPlayer1Id}
@@ -138,21 +179,15 @@ function App() {
         }
         {((player1 && gameId) || (player1 && computerPlayer)) &&
           <div>
-            {!computerPlayer &&
-              <Chat
-                socket={socket}
-                room={gameId}
-                playerName={player1}
-                player2Name={player2}
-                endGame={endGame}
-              />
-            }
             <div className="players_title">
-              <h2 className="player_title host_name_color">{player1}</h2>
-              <h2 className="player_title opponent_name_color">{player2}</h2>
             </div>
             <div className="gameContainer">
               <HostBoard
+                initialGame={initialGame}
+                isMyTurn={isMyTurn}
+                player2={player2}
+                waiting={waiting}
+                player1={player1}
                 endGame={endGame}
                 socket={socket}
                 placeShip={placeShip}
@@ -164,7 +199,6 @@ function App() {
                 createTable={createTable}
                 gameId={gameId}
                 setIsMyTurn={setIsMyTurn}
-                initialShipLegend={initialShipLegend}
                 computerPlayer={computerPlayer}
                 hitBoard={hitBoard}
                 setHitBoard={setHitBoard}
@@ -172,8 +206,13 @@ function App() {
                 setShipsLegend={setShipsLegend}
               />
               <div className="player_game_board_order">
+                <div className="flex_column">
+                  <h2 className="player_title opponent_name_color">{player2}</h2>
+                </div>
                 {(player2 && !userDisconnected && submitDone && waiting) ?
                   <OpponentBoard
+                    player1={player1}
+                    player2={player2}
                     socket={socket}
                     gameId={gameId}
                     endGame={endGame}
@@ -190,6 +229,7 @@ function App() {
                   :
                   (computerPlayer && submitDone ?
                     <ComputerGame
+                      player2={player2}
                       endGame={endGame}
                       setEndGame={setEndGame}
                       setThinkingCircle={setThinkingCircle}
@@ -204,40 +244,24 @@ function App() {
                     />
                     :
                     ((waiting && !userDisconnected && !computerPlayer) ?
-                      <div className="player_game_board player_game_board_msg waiting_animation">{player2} has finished and waiting for you</div>
-                      : (player2 ? <div className="player_game_board player_game_board_msg waiting_animation">Waiting for {player2}, he's not ready yet</div>
-                        : <div className="player_game_board player_game_board_msg waiting_animation">Waiting for someone to join in</div>)))
+                      <div className="player_game_board_msg_container waiting_animation">{player2} has finished and waiting for you</div>
+                      : (player2 ? <div className="player_game_board_msg_container waiting_animation">Waiting for {player2}, he's not ready yet</div>
+                        : <div className="player_game_board_msg_container waiting_animation">Waiting for someone to join in</div>)))
                 }
-                {(submitDone && !computerPlayer) &&
-                  ((player2 && isMyTurn && waiting)
-                    ? <div className="your_turn_colors witch_turn_display" >It's your turn</div>
-                    : ((player2 && !isMyTurn && waiting) &&
-                      <div className="opponent_turn_colors witch_turn_display" >It's {player2}'s turn</div>)
-                  )
+                {gameId &&
+                  <Chat
+                    socket={socket}
+                    room={gameId}
+                    playerName={player1}
+                    player2Name={player2}
+                    endGame={endGame}
+                  />
                 }
-
               </div>
             </div>
           </div>
         }
-        {endGame !== "" &&
-          <div className="new_game_button">
-            {endGame === "lost" ?
-              <div>YOU LOST THE GAME</div>
-              : endGame === "win" ?
-                <div>YOU WON THE GAME</div>
-                : endGame === "left" ?
-                  <div>{player2} HAS LEFT THE GAME</div>
-                  : endGame === "full_game" &&
-                  <div>THE GAME HAS STARTED</div>}
-            <div>
-              <button className="ripple"
-                onClick={() => initialGame()}>
-                Start a new game
-              </button>
-            </div>
-          </div>
-        }
+      <div className="rights">created by Vardi Shuki</div>
       </div>
     </>
   );

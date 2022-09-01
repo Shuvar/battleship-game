@@ -5,9 +5,8 @@ function SocketFunctions({socket, setUserDisconnected, setIsMyTurn, setWaiting, 
     const [name, setName] = React.useState(true)  //1
     
     useEffect(() => {
-        console.log('connected!!! id1:', socket.id);
         socket.on("connect", () => {
-            console.log('connected!!! id2:', socket.id);
+            console.log('connected!!! id:', socket.id);
             initialGame();
             console.log('inputPlayerName, gameId:', inputPlayerName, gameId);
         });

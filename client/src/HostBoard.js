@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 
-function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSubmitDone, boardRow, boardColumn, createTable, gameId, setIsMyTurn, initialShipLegend, computerPlayer, hitBoard, setHitBoard, shipsLegend, setShipsLegend}) {
+function HostBoard({ initialGame, isMyTurn, player2, waiting, player1, endGame, socket, placeShip, setPlaceShip, submitDone, setSubmitDone, boardRow, boardColumn, createTable, gameId, setIsMyTurn, computerPlayer, hitBoard, setHitBoard, shipsLegend, setShipsLegend }) {
 
     const [hostBoard, setHostBoard] = React.useState(createTable(100));   // the board of the game  16
     const [selectedCells, setSelectedCells] = React.useState([]); // the cells that the player selected 19
@@ -15,7 +15,7 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
             setSelectedCells([]);
             setDirection(true);
             setCheckHit(true);
-            setHostBoard(createTable(100));   
+            setHostBoard(createTable(100));
         };
     }, [endGame])
 
@@ -118,6 +118,7 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
                             setHostBoard(newArray);
                             let selectedCellArray = [i, i + 1, i + 2, i + 3];
                             setSelectedCells(selectedCellArray);
+                            console.log(selectedCellArray);
                         }
 
                     };
@@ -210,6 +211,7 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
                 }
             }
         }
+        console.log("selectedCellArray:", selectedCells)
     };
 
     function cellLeaveHandler(i) {
@@ -495,12 +497,16 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
     return (
         <>
             <div className="player_game_board_order">
+                <div className="flex_column">
+                    <h2 className="player_title host_name_color">{player1}</h2>
+                </div>
                 <div className="player_game_board">
                     <div className="flex_column">
                         <div className="ships_legend">
                             {shipsLegend.map((ship, i) => {
                                 return (
-                                    <span key={i}
+                                    <span
+                                        key={i}
                                         className={`ship${ship.length} 
                                             ${ship.length === ship.numOfHit ?
                                                 `ship_was_hit`
@@ -510,36 +516,59 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
                             })}
                         </div>
                         {selectedShip &&
-                            <button className="change_direction_button ripple"
-                                onClick={() => setDirection(!direction)}>Change<br></br> Direction
+                            <button
+                                className="change_direction_button ripple"
+                                onClick={() => setDirection(!direction)}>
+                                Change<br></br> Direction
                             </button>
                         }
                     </div>
                     <div className="board_container">
                         <div className="board_row">
                             {boardRow.map((cell, i) => {
-                                return <span key={i} className="board_row_cell">{(i + 10).toString(36).toUpperCase()}</span>
-                            })}
+                                return (
+                                    <span
+                                        key={i}
+                                        className="board_row_cell">
+                                        {(i + 10).toString(36).toUpperCase()}
+                                    </span>
+                                )
+                            })
+                            }
                         </div>
                         <div className="board_column">
                             {boardColumn.map((cell, i) => {
-                                return <span key={i} className="board_column_cell">{i + 1}</span>
-                            })}
+                                return (
+                                    <span
+                                        key={i}
+                                        className="board_column_cell">
+                                        {i + 1}
+                                    </span>
+                                )
+                            })
+                            }
                         </div>
                         <div className="game_board">
                             {hostBoard.map((cell, i) => {
                                 return (<>
-                                    <span key={i}
-                                        className={`game_board_cell 
+                                    <span
+                                        key={i}
+                                        className={
+                                            `game_board_cell 
                                             ${cell?.classNameSelected ?
                                                 cell.classNameSelected
                                                 : (cell?.classNameAroundShip ?
                                                     cell.classNameAroundShip
                                                     : cell?.classNameHover)} 
                                             `}
-                                        onMouseOver={() => cellOverHandler(i)}
-                                        onMouseLeave={() => cellLeaveHandler(i)}
-                                        onClick={() => cellClickHandler()}>
+                                        onMouseOver={() => cellOverHandler(i)}  //touch
+                                        onMouseLeave={(e) => cellLeaveHandler(i)}  //move
+                                        onClick={() => cellClickHandler()}  //end
+
+                                        onTouchStart={(e) => cellOverHandler(i)}    //mobile
+                                        // onTouchMove={(e) => cellLeaveHandler(i); cellOverHandler(i)}
+                                        onTouchEnd={(e) => cellClickHandler()}  //mobile
+                                    >
                                         {cell.shipId &&
                                             (!submitDone &&
                                                 <div className="deletebutton"
@@ -554,7 +583,8 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
                                 <div className="hitBoard">
                                     {hitBoard.map((cell, i) => {
                                         return <>
-                                            <span key={i}
+                                            <span
+                                                key={i}
                                                 className={cell.className}>
                                             </span>
                                         </>
@@ -583,8 +613,34 @@ function HostBoard({ endGame, socket, placeShip, setPlaceShip, submitDone, setSu
                             }}>
                             yes
                         </button>
-                    </div>}
-
+                    </div>
+                }
+                {(submitDone && !computerPlayer && endGame === "") &&
+                    ((player2 && isMyTurn && waiting)
+                        ? <div className="your_turn_colors witch_turn_display" >It's your turn</div>
+                        : ((player2 && !isMyTurn && waiting) &&
+                            <div className="opponent_turn_colors witch_turn_display" >It's {player2}'s turn</div>)
+                    )
+                }
+                {endGame !== "" &&
+                    <div className="end_game_box_container">
+                        <div className="new_game_button">
+                            {endGame === "lost" ?
+                                <div>YOU LOST THE GAME</div>
+                                : endGame === "win" ?
+                                    <div>YOU WON THE GAME</div>
+                                    : endGame === "left" &&
+                                    <div>{player2} HAS LEFT THE GAME</div>
+                            }
+                            <div>
+                                <button className="ripple"
+                                    onClick={() => initialGame()}>
+                                    Back to main menu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </>
     )
